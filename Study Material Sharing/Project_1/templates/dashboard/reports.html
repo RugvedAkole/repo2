@@ -1,0 +1,71 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block admin_content %}
+<div class="report-content" style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); font-family: sans-serif;">
+    
+    <h3 style="margin-top: 0; color: #2c3e50; font-weight: 500;">
+        Report Generation Based on Enquiry Dates:
+    </h3>
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+    <form method="get" class="search-form" style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; font-size: 14px;">
+        <label for="from_date">From:</label>
+        <input type="date" id="from_date" name="from" value="{{ from_date_val }}" 
+               style="padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 180px;">
+        
+        <label for="to_date">To:</label>
+        <input type="date" id="to_date" name="to" value="{{ to_date_val }}" 
+               style="padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 180px;">
+        
+        <button type="submit" style="padding: 10px 25px; background-color: #2ecc71; color: white; border: none; border-radius: 4px; font-size: 15px; cursor: pointer;">
+            Search
+        </button>
+        
+        <button type="button" onclick="window.print()" style="margin-left: auto; padding: 10px 20px; background-color: #bdc3c7; border: none; border-radius: 4px; cursor: pointer;">
+            Print Report
+        </button>
+    </form>
+
+    <table class="report-table" style="width: 100%; border-collapse: collapse; font-size: 13px; color: #333;">
+        <thead>
+            <tr style="border-bottom: 2px solid #ddd; background-color: #f9f9f9; text-align: left;">
+                <th style="padding: 12px;">Sr. No.</th>
+                <th style="padding: 12px;">Name</th>
+                <th style="padding: 12px;">E-mail Id</th>
+                <th style="padding: 12px;">Mobile</th>
+                <th style="padding: 12px;">Education</th>
+                <th style="padding: 12px;">Skills</th>
+                <th style="padding: 12px;">Message</th>
+                <th style="padding: 12px;">Location</th>
+                <th style="padding: 12px;">Enquiry Date</th>
+                <th style="padding: 12px;">Edit</th>
+                <th style="padding: 12px;">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px;">{{ forloop.counter }}</td>
+                <td style="padding: 12px;">{{ profile.user.username }}</td>
+                <td style="padding: 12px;">{{ profile.user.email }}</td>
+                <td style="padding: 12px;">{{ profile.mobile|default:"-" }}</td>
+                <td style="padding: 12px;">{{ profile.education|default:"-" }}</td>
+                <td style="padding: 12px;">{{ profile.skills|default:"-" }}</td>
+                <td style="padding: 12px;">{{ profile.message|default:"-" }}</td>
+                <td style="padding: 12px;">{{ profile.location|default:"-" }}</td>
+                <td style="padding: 12px;">{{ profile.user.date_joined|date:"d-m-Y" }}</td>
+                <td style="padding: 12px;"><a href="#" style="color: #3498db;">Edit</a></td>
+                <td style="padding: 12px;"><a href="#" style="color: #e74c3c;">Delete</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" style="text-align: center; padding: 40px; color: #888; border-bottom: 1px solid #eee;">
+                    No student enquiries available for the selected dates.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

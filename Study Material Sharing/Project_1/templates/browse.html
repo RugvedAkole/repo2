@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Library | EduShare</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="{% url 'index' %}" class="logo">
+                <div class="logo-icon"><i data-lucide="book-open"></i></div>
+                <span>EduShare</span>
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'browse' %}" class="nav-link active">Browse</a>
+                <div id="nav-user" class="nav-links">
+                    <a href="{% url 'upload' %}" class="btn btn-outline">Upload</a>
+                    <div class="avatar" id="user-avatar">{{ user.username|slice:":1"|upper }}</div>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline; margin-left: 10px;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link" style="border:none; background:none; cursor:pointer;">
+                            <i data-lucide="log-out"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<main class="container">
+    <header class="page-header">
+        <div>
+            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 8px;">Study <span class="gradient-text">Library</span></h1>
+            <p style="color: var(--text-muted);">Discover the best resources shared by your peers.</p>
+        </div>
+        <div class="search-bar">
+            <form method="GET" action="{% url 'browse' %}" id="search-form">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" name="search" id="search-input" placeholder="Search subjects..." class="search-input" value="{{ request.GET.search }}">
+            </form>
+        </div>
+    </header>
+
+    <div class="filters" id="filters">
+        <a href="?category=" class="filter-btn {% if not request.GET.category %}active{% endif %}" data-cat="">All</a>
+        <a href="?category=Notes" class="filter-btn {% if request.GET.category == 'Notes' %}active{% endif %}" data-cat="Notes">Notes</a>
+        <a href="?category=Paper" class="filter-btn {% if request.GET.category == 'Paper' %}active{% endif %}" data-cat="Paper">Papers</a>
+        <a href="?category=Assignment" class="filter-btn {% if request.GET.category == 'Assignment' %}active{% endif %}" data-cat="Assignment">Assignments</a>
+    </div>
+
+    <div class="grid" id="materials-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; align-items: stretch;">
+        {% for m in materials %}
+        <div class="card" style="display: flex; flex-direction: column; height: 100%; padding: 24px; position: relative;">
+            
+            <div style="flex-grow: 1;">
+                <span class="card-tag tag-{{ m.category|lower }}">{{ m.category }}</span>
+                <h3 class="card-title" style="margin-top: 15px;">{{ m.title }}</h3>
+                <p class="card-desc">{{ m.description|truncatechars:80 }}</p>
+                
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="tag" style="width: 14px; height: 14px;"></i>
+                    {{ m.subject }} | <span style="color: var(--primary);">{{ m.semester }}</span>
+                </div>
+            </div>
+
+            <div class="card-footer" style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);">
+                <div class="user-info">
+                    <div class="avatar">{{ m.uploaded_by.username|slice:":1"|upper }}</div>
+                    <span class="user-name">{{ m.uploaded_by.username }}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="action-btn">
+                        <i data-lucide="thumbs-up"></i>
+                        <span style="font-size: 0.7rem; margin-left: 4px;">{{ m.total_likes }}</span>
+                    </button>
+                    <a href="{% url 'view_material' m.pk %}" class="action-btn">
+                        <i data-lucide="eye"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: var(--text-muted);">
+            <i data-lucide="folder-open" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+            <p>No materials found matching your search.</p>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+    <script>
+        lucide.createIcons();
+
+        // Automatically submit search when user stops typing
+        let timeout = null;
+        document.getElementById('search-input').addEventListener('keyup', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                document.getElementById('search-form').submit();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

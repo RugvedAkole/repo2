@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Portal</title>
+    <style>
+        body { display: flex; margin: 0; font-family: sans-serif; background: #f4f7f6; }
+        /* SIDEBAR STYLE (Like your image) */
+        .sidebar { width: 260px; background: #2c3e50; color: white; min-height: 100vh; }
+        .sidebar-header { padding: 20px; background: #1a252f; text-align: center; }
+        .nav-item { padding: 15px 25px; display: block; color: #bdc3c7; text-decoration: none; border-left: 5px solid transparent; }
+        .nav-item:hover { background: #34495e; color: white; }
+        .nav-item.active { background: #3498db; color: white; border-left: 5px solid #fff; }
+        
+        .main-content { flex: 1; padding: 20px; }
+        .top-bar { background: white; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header"><h3>ADMIN PANEL</h3></div>
+        <a href="{% url 'admin-dashboard' %}" class="nav-item">Dashboard</a>
+        <a href="{% url 'admin-manage-users' %}" class="nav-item">Student Details</a>
+        <a href="{% url 'admin-reports' %}" class="nav-item">Report Generation</a>
+        <a href="#" class="nav-item">Change Password</a>
+        <a href="{% url 'logout' %}" class="nav-item">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">Dashboard: EduShare Portal</div>
+        {% block admin_content %}{% endblock %}
+    </div>
+</body>
+</html>

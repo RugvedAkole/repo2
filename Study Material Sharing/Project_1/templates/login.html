@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EduShare</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="auth-page">
+    <main class="auth-container">
+        <div class="auth-card">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <a href="{% url 'index' %}" class="logo" style="justify-content: center; margin-bottom: 20px;">
+                    <div class="logo-icon"><i data-lucide="book-open"></i></div>
+                    <span>EduShare</span>
+                </a>
+                <h1 style="font-size: 1.8rem; font-weight: 800; color: #1e293b;">Welcome Back</h1>
+                <p style="color: #64748b; margin-top: 8px;">Log in to access your study library</p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error-msg" style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="alert-circle" style="width: 18px;"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Username</label>
+                    <div class="input-wrapper" style="position: relative;">
+                        <i data-lucide="user" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; width: 18px;"></i>
+                        <input type="text" name="username" class="auth-input" placeholder="Enter your username" required style="padding-left: 45px;">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Password</label>
+                    <div class="input-wrapper" style="position: relative;">
+                        <i data-lucide="lock" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; width: 18px;"></i>
+                        <input type="password" name="password" class="auth-input" placeholder="••••••••" required style="padding-left: 45px;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 30px; height: 50px; width: 100%; font-weight: 700; border-radius: 12px;">
+                    Sign In
+                </button>
+            </form>
+
+            <div style="margin-top: 25px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                <p style="color: #64748b; font-size: 0.95rem;">
+                    New here? <a href="{% url 'signup' %}" style="color: #4f46e5; font-weight: 700; text-decoration: none;">Create an account</a>
+                </p>
+            </div>
+        </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

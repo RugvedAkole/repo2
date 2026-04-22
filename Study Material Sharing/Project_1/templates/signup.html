@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join EduShare | Signup</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="auth-page">
+
+    <div class="auth-card">
+        <h1 class="auth-title">Create <span class="gradient-text">Account</span></h1>
+        
+        <div class="message-container">
+            {% for x in messages %}
+            <div id="myAlert" class="alert-premium">
+                <i data-lucide="alert-circle" style="width: 18px; color: #ef4444;"></i>
+                <strong>{{ x }}</strong> 
+            </div> 
+            <script>
+                setTimeout(() => { 
+                    const a = document.getElementById('myAlert');
+                    if(a) a.style.display = 'none';
+                }, 4000);
+            </script>
+            {% endfor %}
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" placeholder="Letters only" 
+                       required pattern="[A-Za-z]+" title="Only alphabets are allowed.">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-input" placeholder="user@gmail.com" 
+                       required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" id="password-input" class="form-input" placeholder="Min 8 chars" required minlength="8">
+                <div class="strength-meter-wrapper">
+                    <div id="strength-bar" class="strength-bar"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-input" placeholder="Repeat password" required>
+            </div>
+
+            <div class="form-group" style="margin-top: 24px;">
+                <input type="submit" value="Create Account" class="btn btn-primary" style="width: 100%;">
+            </div>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}" class="auth-link">Log In</a>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const pass = document.getElementById('password-input');
+        const bar = document.getElementById('strength-bar');
+        pass.addEventListener('input', () => {
+            let s = 0;
+            if (pass.value.length > 7) s += 33;
+            if (/[A-Z]/.test(pass.value)) s += 33;
+            if (/[0-9]/.test(pass.value)) s += 34;
+            bar.style.width = s + "%";
+            bar.style.background = s < 40 ? "#ef4444" : s < 70 ? "#f59e0b" : "#10b981";
+        });
+    </script>
+</body>
+</html>
